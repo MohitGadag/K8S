@@ -1,0 +1,258 @@
+
+*******Kubernates Interview Questions_list 2********
+
+1. How to achieve zero downtime 
+Ans.
+Currently we are using blue/green deployment strategy in which we create two separate,
+but identical environments. One environment (blue) is running the current application 
+version and one environment (green) is running the new application version. 
+Using a blue/green deployment strategy increases application availability and reduces 
+deployment risk by simplifying the rollback  process if a deployment fails. 
+Once testing has been completed on the green environment,
+live application traffic is directed to the green environment and the blue environment
+is deprecated(meaning not recommended).
+
+
+2. what is the deployment strategy you use ? 
+Ans.
+Same as Q1
+
+3. explain how you deploy? process ? which new resources you create and how ?
+Ans.
+1.By using deplyoment yaml file we deploy.
+2.In yml file above mention replicaset -basicaly used to create no. of pods 
+3.We create services,namespace,daemonset,Persistent volumes etc
+
+4. what are the changes that can be done in ingress which is in running?
+Not covered
+ 
+5. pod is deleted, again when you create the pod will be up , how to delete the particular pod properly?
+Ans.
+When pod is created using replicas in deployment file,
+The pod even after getting deleted will occur again,
+In those cases delete the deployment yml file itself,
+then the pod wont be replicated.
+
+6. Rollback deployment 
+Ans.
+if the current state of the Deployment is not stable. Each rollback updates the revision of the Deployment.
+i.e Rollback deployment is used for the deployment to get into its previous version.
+
+ex.kubectl rollout undo deploy/mydeployments
+
+7. when to use role binding and cluster role binding?
+Ans.
+RoleBinding 
+		- Role bindind as name indicates is used to bind roles to subjects (user, sa , groups)
+usage: 
+			If we need to define permissions inside a namesapce use Roles. 
+			
+		
+ClusterRoleBinding 
+		- Cluster Role bindind is used to bind cluster roles to subjects (user, sa , groups)
+		
+		- we can user rolebinding to bind clusterrole to a role of a particular namespace.
+usage: 
+			 
+			If we need to define permissions at cluster wide use ClusterRole
+
+
+
+8. explain one disadvantage of using defaults name space in k8s
+Ans.
+If we haven't created the namespaces in k8s then all the pods will be created in default 
+namespace,So working,handling & managing with pods will be difficult.
+Without organization of pods, the number of deployed services and objects 
+can quickly get out of control, leading to performance, security, and other issues.
+
+9. what do u know about services?
+Ans.
+Services are the network configurations in k8S.Services are the default load balancer in k8s.
+
+There are three types
+	1.Cluster Ip-This is the default service works at cluster level only,
+				 where pods within the cluster can commnunicate with each other using ip address.
+                 ClusterIP cannot be accessed outside cluster. 
+	2.Nodeport- If the pods want to commnunicate with external traffice then they can't do with cluster Ip,
+                To do that we use Nodeport.Automatically a ClusterIP will be created internally
+
+	3.Loadbalancer-It is a tyoe of service which is used to link exernatl load balancer to the cluster.
+	              - This type of serviec is used by cloud providers and this service is completely depends on cloud providers. 
+	              - K8s now proides a better alternative for this service type which is called Ingress.
+                				
+10. what kind of cluster u have set up in ur organization? 
+
+Ans.
+
+Creating a cluster with kubeadm
+Using kubeadm, you can create a minimum viable Kubernetes cluster that conforms
+to best practices. In fact, you can use kubeadm to set up a cluster that will pass
+the Kubernetes Conformance tests. 
+kubeadm also supports other cluster lifecycle functions, 
+
+such as bootstrap tokens and cluster upgrades.
+
+The kubeadm tool is good if you need:
+
+A simple way for you to try out Kubernetes, possibly for the first time.
+A way for existing users to automate setting up a cluster and test their application.
+A building block in other ecosystem and/or installer tools with a larger scope.
+You can install and use kubeadm on various machines: your laptop, 
+a set of cloud servers, a Raspberry Pi, and more. 
+Whether you're deploying into the cloud or on-premises, 
+you can integrate kubeadm into provisioning systems such as Ansible or Terraform.
+
+Before you begin
+To follow this guide, you need:
+
+One or more machines running a deb/rpm-compatible Linux OS; for example: Ubuntu or CentOS.
+2 GiB or more of RAM per machine--any less leaves little room for your apps.
+At least 2 CPUs on the machine that you use as a control-plane node.
+Full network connectivity among all machines in the cluster. 
+You can use either a public or a private network.
+You also need to use a version of kubeadm that can deploy the version of Kubernetes
+that you want to use in your new cluster.
+
+Kubernetes' version and version skew support policy applies to kubeadm as well as7
+to Kubernetes overall. 
+Check that policy to learn about what versions of Kubernetes and kubeadm are supported.
+This page is written for Kubernetes v1.23.
+
+The kubeadm tool's overall feature state is General Availability (GA). 
+Some sub-features are still under active development. 
+The implementation of creating the cluster may change slightly as the tool evolves, 
+but the overall implementation should be pretty stable.
+
+
+11. Imagine my pods are running in cluster. they are using http. 
+I want to provide secure certification for those pods. How to add certification 
+to those pods.Lets say i want to provide https for those pods. How to do it??
+
+Ans.
+May be using Init containers & sidecar??
+
+12. Follow up. what is certification? Where exactly u will add certification? 
+Ans.
+For authentication of the website we need extra certifications like ssl certification,
+By using Init containers we can initialise applications running inside pods with SSL certifications
+
+13. What is CNI? what is the use of CNI?
+Ans.
+Container Network Interface (CNI) is a framework for dynamically configuring 
+networking resources. It uses a group of libraries and specifications written in Go.
+The plugin specification defines an interface for configuring the network, 
+provisioning IP addresses, and maintaining connectivity with multiple hosts.
+
+When used with Kubernetes, CNI can integrate smoothly with the kubelet to 
+enable the use of an overlay or underlay network to automatically configure 
+the network between pods. Overlay networks encapsulate network traffic using 
+a virtual interface such as Virtual Extensible LAN (VXLAN). Underlay networks 
+work at the physical level and comprise switches and routers.
+
+Once you’ve specified the type of network configuration type,
+the container runtime defines the network that containers join.
+The runtime adds the interface to the container namespace via a call
+to the CNI plugin and allocates the connected subnetwork routes via calls 
+
+to the IP Address Management (IPAM) plugin.
+
+CNI supports Kubernetes networking, and can also be used with other Kubernetes-based
+container orchestration platforms such as OpenShift. 
+CNI uses a software-defined networking (SDN) approach to unify container 
+communication throughout clusters.
+
+
+14. How do you enable communication between containers?
+Ans.
+Services are the defualt network configurations in K8s.
+Containers reside inside the pods & containers within the pods 
+can commnunicate via localhost with ports(they dont need ip address)
+
+ex.
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: testpod
+spec:
+  containers:
+    - name: c00
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+    - name: c01
+      image: httpd
+      ports:
+       - containerPort: 80
+In above example c00 & c01 can commnunicate each other.
+
+ex. c00 will use the localhost:80 to see whether it can commnunicate with c01.
+
+15. How many containers are running in your nodes?
+Ans.
+Depends on the application user is running.
+Could be 100's of containers
+16. Issues you face in your project in Kubernetes. How do you fix it?
+Ans.
+We can use following below commmands to troubleshoot issues in our project.
+Describe command
+logs command
+events
+explain
+
+17. Headless services to run DB on kubernetes. Stateful sets in kubernetes.
+Ans.
+As statefullset stores data in server hence applications
+like mysql are the examples of stateful sets.
+
+18. configmaps n secrets?
+Not covered
+19. Kubernetes difference between deployment and daemonset and statefullset
+Ans.
+Deployment -object is used to create replicas ,pods 
+Daemonset - Objects are used to run a copy of pod in each node so that it can gather
+all the logs & send it to monitoring tools
+Statefulset-statefullset stores data in server hence applications
+like mysql are the examples of stateful sets.
+
+
+20. Where do u store the secrets
+Not covered
+21. Blue green strategy and write the code for deployment of blue green in yaml or CLI?
+Ans.blue/green deployment strategy in which we create two separate,
+but identical environments. One environment (blue) is running the current application 
+version and one environment (green) is running the new application version. 
+Using a blue/green deployment strategy increases application availability and reduces 
+deployment risk by simplifying the rollback  process if a deployment fails. 
+Once testing has been completed on the green environment,
+live application traffic is directed to the green environment and the blue environment
+is deprecated(meaning not recommended).
+
+yml (topic tobe covered) 
+
+
+22. What are the security measures u take for your cluster?
+Ans.
+ -Keeping the version of Kubernetes up to date is one of the simplest
+ things you can do to 4 improve your security. Kubernetes frequently 
+ introduces new security features and provides security patches
+	
+	-Restrict network access to the control plane and nodes
+	You should limit exposure of your cluster control plane and nodes to the internet
+	- Creating a private cluster. 
+	-Group authentication
+CIS GKE Benchmark Recommend
+-etc
+(topics yet to be covered)
+
+23. What is kubelet
+Ans.
+			Kubelet is a component in worker node in a cluster.
+			It commnunicates the pod status to api server located in master node.
+			It is an agent that runs on each and every worker node and it alsways watches the API 
+			  server for pod related changes running in its worker node.
+			- kubelet always make sure that the assigend pods to its worker node is running.
+			- kubelet is the one which communicates with containarisation tool (docker daemon)
+              through docker API (CRI). 	
+			- work of kubelet is to create and run the pods. Always reports the status of the worker node 
+			  and each pod to API server. (uses a tool call cAdvisor)
+			- Kubelet is the one which runs probes.	
